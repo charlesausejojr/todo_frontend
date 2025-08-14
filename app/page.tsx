@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import todoAPI from "@/lib/api";
 import TodoList from "@/components/TodoList";
-import { CreateTodoData, UpdateTodoData } from "@/types/todo";
+import { Todo, CreateTodoData, UpdateTodoData } from "@/types/todo";
 import AddTodoForm from "@/components/AddTodoForm";
 
 export default function Home() {
@@ -22,8 +22,8 @@ export default function Home() {
       const data = await todoAPI.getTodos();
       console.log(data);
       setTodos(data);
-    } catch (err: any) {
-      setError(err.message || "Failed to load todos");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load todos");
     } finally {
       setIsLoading(false);
     }
@@ -34,8 +34,8 @@ export default function Home() {
     try {
       const created = await todoAPI.createTodo(newTodo);
       setTodos((prev) => [created, ...prev]);
-    } catch (err: any) {
-      setError(err.message || "Failed to add todo");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to add todo");
     } finally {
       setIsLoading(false);
     }
@@ -46,8 +46,8 @@ export default function Home() {
     try {
       const updated = await todoAPI.updateTodo(id, updates);
       setTodos((prev) => prev.map((todo) => (todo.id === id ? updated : todo)));
-    } catch (err: any) {
-      setError(err.message || "Failed to update todo");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to update todo");
     } finally {
       setIsLoading(false);
     }
@@ -58,8 +58,8 @@ export default function Home() {
     try {
       await todoAPI.deleteTodo(id);
       setTodos((prev) => prev.filter((todo) => todo.id !== id));
-    } catch (err: any) {
-      setError(err.message || "Failed to delete todo");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to delete todo");
     } finally {
       setIsLoading(false);
     }
